@@ -1,27 +1,25 @@
 version: '3'
 services:
 
-  #PHP Service
-  app:
+  web:
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
     image: php:8.0-fpm
-    container_name: lucky_explorer_php
+    container_name: container_name_web
     restart: unless-stopped
     tty: true
     environment:
-      SERVICE_NAME: app
+      SERVICE_NAME: web
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
       - ./:/var/www
       - ./docker/php/php.ini:/usr/local/etc/php/conf.d/local.ini
 
-  #Nginx Service
-  nginx:
+  webserever:
     image: nginx:alpine
-    container_name: lucky_explorer_nginx
+    container_name: container_name_nginx
     restart: unless-stopped
     tty: true
     ports:
@@ -30,20 +28,19 @@ services:
       - ./:/var/www
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
 
-  #MySQL Service
-  mysql:
+  database:
     image: mysql:8.0.25
-    container_name: lucky_explorer_mysql
+    container_name: container_name_mysql
     command: "--default-authentication-plugin=mysql_native_password"
     restart: unless-stopped
     tty: true
     ports:
       - "7776:3306"
     environment:
-      MYSQL_DATABASE: lucky_explorer
-      MYSQL_USER: lucky_explorer
-      MYSQL_PASSWORD: lucky_explorer
-      MYSQL_ROOT_PASSWORD: lucky_explorer
+      MYSQL_DATABASE: database
+      MYSQL_USER: database
+      MYSQL_PASSWORD: database
+      MYSQL_ROOT_PASSWORD: database
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
@@ -52,7 +49,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: lucky_explorer_phpmyadmin
+    container_name: container_name_phpmyadmin
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
