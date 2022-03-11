@@ -1,11 +1,10 @@
 version: '3'
 services:
 
-  web:
+  app:
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
-    image: php:8.0-fpm
     container_name: container_name_web
     restart: unless-stopped
     tty: true
@@ -51,7 +50,9 @@ services:
     image: phpmyadmin/phpmyadmin
     container_name: container_name_phpmyadmin
     environment:
-      PMA_HOST: db
+      PMA_HOST: root
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       PMA_PORT: 3306
     ports:
       - 7760:80
