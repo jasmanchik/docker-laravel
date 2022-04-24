@@ -1,6 +1,21 @@
-init: docker-down-clear docker-pull docker-build-pull docker-up app-init
+#run container
+init: docker-down-clear  docker-pull docker-build-pull docker-up
+
+#install framework, if a project is a new one
+framework:laravel-install
+
+#install composer packages
+composer:composer-install
+
+#shut down container
 down: docker-down-clear
-migrate: laravel-migrate-fresh
+
+#migrations
+migrate: laravel-migrate
+migrate-fresh: laravel-migrate-fresh
+migrate-fresh-seed: laravel-migrate-fresh-seed
+
+current_dir := $(abspath $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST))))))
 
 docker-up:
 	docker-compose up -d
@@ -14,13 +29,17 @@ docker-pull:
 docker-build-pull:
 	docker-compose build --pull
 
-app-init: composer-install
+laravel-install:
+	docker-compose exec app composer create-project laravel/laravel application
 
 composer-install:
-	docker-compose run --rm php-cli composer install
+	docker run --rm -v $(current_dir)/application:/app composer install
 
-test:
-	docker-compose run --rm php-cli composer test
+laravel-migrate:
+	docker-compose exec app sh -c "cd application && php artisan migrate"
 
 laravel-migrate-fresh:
-	docker-compose run --rm php-cli php artisan migrate:fresh --seed
+	docker-compose exec app sh -c "cd application &&php artisan migrate:fresh"
+
+laravel-migrate-fresh-seed:
+	docker-compose exec app sh -c "cd application && php artisan migrate:fresh --seed"
