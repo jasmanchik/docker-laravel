@@ -5,7 +5,7 @@ WORKDIR /var/www
 
 # Install dependencies
 #--no-cache
-RUN apk update && apk add  \
+RUN apk update && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     oniguruma-dev \
     libzip-dev \
     build-base \
@@ -19,6 +19,12 @@ RUN apk update && apk add  \
     unzip \
     git \
     curl
+
+
+#Install redis
+RUN pecl install -o -f redis \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable redis
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl

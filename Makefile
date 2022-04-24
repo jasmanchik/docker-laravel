@@ -1,11 +1,11 @@
 #run container
-init: docker-down-clear  docker-pull docker-build-pull docker-up
+init: docker-down-clear docker-pull docker-build-pull docker-up
 
 #install framework, if a project is a new one
 framework:laravel-install
 
 #install composer packages
-composer:composer-install
+composer:composer-install composer-install-packages
 
 #shut down container
 down: docker-down-clear
@@ -21,7 +21,8 @@ docker-up:
 	docker-compose up -d
 
 docker-down-clear:
-	docker-compose down -v --remove-orphans
+	docker-compose down --remove-orphans
+ #-v
 
 docker-pull:
 	docker-compose pull
@@ -34,6 +35,9 @@ laravel-install:
 
 composer-install:
 	docker run --rm -v $(current_dir)/application:/app composer install
+
+composer-install-packages:
+	docker-compose exec app sh -c "cd application && composer require barryvdh/laravel-debugbar --dev"
 
 laravel-migrate:
 	docker-compose exec app sh -c "cd application && php artisan migrate"
