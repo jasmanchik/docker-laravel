@@ -21,8 +21,7 @@ docker-up:
 	docker-compose up -d
 
 docker-down-clear:
-	docker-compose down --remove-orphans
- #-v
+	docker-compose down -v --remove-orphans
 
 docker-pull:
 	docker-compose pull
