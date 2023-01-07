@@ -1,11 +1,11 @@
-FROM php:8.1-fpm-alpine
+FROM php:8.2-fpm-alpine
 
 # Set working directory
 WORKDIR /var/www
 
 # Install dependencies
 #--no-cache
-RUN apk update && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+RUN apk update && apk add --virtual .phpize-deps $PHPIZE_DEPS \
     oniguruma-dev \
     libzip-dev \
     build-base \
@@ -19,7 +19,6 @@ RUN apk update && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     unzip \
     git \
     curl
-
 
 #Install redis
 RUN pecl install -o -f redis \
@@ -39,7 +38,7 @@ RUN addgroup -g 1000 -S www && \
     adduser -u 1000 -S www -G www
 
 # Copy existing application directory contents
-COPY ./ /var/www
+COPY ./application /var/www
 
 # Copy existing application directory permissions
 COPY --chown=www:www ./ /var/www

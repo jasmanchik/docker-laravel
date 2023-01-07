@@ -1,6 +1,5 @@
 version: '3'
 services:
-
     app:
         build:
             context: .
@@ -30,7 +29,7 @@ services:
             - "8080:80"
             - "443:443"
         volumes:
-            - ./:/var/www
+            - ./application:/var/www
             - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
         networks:
             - app-network
@@ -76,7 +75,7 @@ services:
             PMA_ARBITRARY: 1
             PMA_HOST: db
             PMA_PORT: 3306
-            PMA_USER: db_user
+            PMA_USER: user
             PMA_PASSWORD: root
         networks:
             - app-network
