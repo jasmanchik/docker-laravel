@@ -35,6 +35,7 @@ services:
             - app-network
 
     db:
+        platform: linux/x86_64
         image: mysql:8.0.25
         container_name: db
         restart: unless-stopped
