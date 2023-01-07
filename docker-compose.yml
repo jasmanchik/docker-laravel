@@ -29,7 +29,7 @@ services:
             - "8080:80"
             - "443:443"
         volumes:
-            - ./application:/var/www
+            - ./:/var/www
             - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
         networks:
             - app-network
